@@ -6,4 +6,4 @@ const ProblemRegister = () => {
     );
 };
 
-export default ProblemRegister; 
+export default ProblemRegister;  

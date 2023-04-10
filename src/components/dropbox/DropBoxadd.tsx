@@ -6,8 +6,8 @@ const Search = () => {
     const [selectDropValue, setSelectDropValue] = useState('항목을 선택하세요')
     const toggleSelect = () => {
          setIsOpen(!isOpen);
-    }
-
+    } 
+ 
     const menuSelect = (value: string | null) => {
         if (value) {
             setSelectDropValue(value);

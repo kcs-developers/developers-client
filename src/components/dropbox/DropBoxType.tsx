@@ -10,7 +10,7 @@ interface SelectDropdownProps {
 
   const SelectDropdown: React.FC<SelectDropdownProps> = ({ selectName, options, paramName }) => {
     
-  
+   
     const [isOpen, setIsOpen] = useState(false);
     const [selectDropValue, setSelectDropValue] = useState('Type을 선택하세요')
     const toggleSelect = () => {

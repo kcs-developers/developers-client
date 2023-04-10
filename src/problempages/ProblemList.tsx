@@ -9,7 +9,7 @@ interface MainListProps {
 }
 
 type Type = {
-  section: MainListProps[];
+  section: MainListProps[]; 
   sectionHeader: string;
 };
 

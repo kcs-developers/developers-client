@@ -121,7 +121,7 @@ interface SelectDropdownProps {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> 
             </Fragment>
         </div>
     )

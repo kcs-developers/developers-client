@@ -7,7 +7,7 @@ const Checkbox: React.FC = () => {
         likes: false,
         createdTime: false,
     });
-
+ 
     useEffect(() => {
         const fetchData = async () => {
             const response = await axios.get("/problem/list", {

@@ -7,7 +7,7 @@ const Search = () => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
         setSearchTerm(e.target.value)
-    }
+    } 
     
     const searchProblems = async() =>{
         try{

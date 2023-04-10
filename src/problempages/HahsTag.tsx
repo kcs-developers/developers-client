@@ -79,7 +79,7 @@
 //   padding: 5px;
 //   background-color: tomato;
 //   border-radius: 5px;
-//   color: white;
+//   color: white; 
 //   font-size: 13px;
 // `
 

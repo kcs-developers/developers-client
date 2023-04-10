@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import Checkbox from "components/checkbox";
 
 const ProblemMain = () => {
-
+ 
  
   const section = [
     { nickname: "유저1", type: "🔢객관식", views: 0, title: "제목입니다", likes: 0 },

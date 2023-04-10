@@ -5,7 +5,7 @@ interface SelectDropdownProps {
     selectName: string;
     options: string[];
     paramName: string;
-}
+} 
  
 const SelectDropdown: React.FC<SelectDropdownProps> = ({ selectName, options, paramName }) => {
 
