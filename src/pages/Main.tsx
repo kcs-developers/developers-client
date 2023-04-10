@@ -1,3 +1,4 @@
+import Carousel from "components/Carousel";
 import MainList from "components/MainList";
 
 const Main = () => {
@@ -11,15 +12,16 @@ const Main = () => {
 
   return (
     <>
+      <Carousel />
       {/* 모바일 */}
-      <div className="md:hidden flex flex-col">
+      <div className="flex flex-col md:hidden">
         <MainList section={section} sectionHeader={"최근 등록된 문제"} />
         <MainList section={section} sectionHeader={"최근 개설된 채팅방"} />
         <MainList section={section} sectionHeader={"WEEKLY SOLVED BEST"} />
         <MainList section={section} sectionHeader={"WEEKLY ROOM BEST"} />
       </div>
       {/* 데스크탑 */}
-      <div className="hidden md:grid grid-cols-2 gap-5 w-full">
+      <div className="hidden w-full grid-cols-2 gap-5 md:grid">
         <MainList section={section} sectionHeader={"최근 등록된 문제"} />
         <MainList section={section} sectionHeader={"최근 개설된 채팅방"} />
         <MainList section={section} sectionHeader={"WEEKLY SOLVED BEST"} />

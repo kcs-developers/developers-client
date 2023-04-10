@@ -1,0 +1,16 @@
+import { SVGProps } from "react";
+const PersonIcon = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={24}
+    height={24}
+    fill="none"
+    {...props}
+  >
+    <path
+      fill="current"
+      d="M16 14a5 5 0 0 1 4.995 4.783L21 19v1a2 2 0 0 1-1.85 1.995L19 22H5a2 2 0 0 1-1.995-1.85L3 20v-1a5 5 0 0 1 4.783-4.995L8 14h8ZM12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10Z"
+    />
+  </svg>
+);
+export default PersonIcon;
