@@ -9,7 +9,7 @@ interface SelectDropdownProps {
   
 
   const SelectDropdown: React.FC<SelectDropdownProps> = ({ selectName, options, paramName }) => {
-    // ...기존 코드
+    
   
     const [isOpen, setIsOpen] = useState(false);
     const [selectDropValue, setSelectDropValue] = useState('Type을 선택하세요')

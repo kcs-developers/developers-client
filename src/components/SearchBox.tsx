@@ -21,7 +21,7 @@ const Search = () => {
             if (axios.isAxiosError(error)) {
                 console.error("Axios error:", error.message, "Code:", error.code);
               } else {
-                console.error("Unknown error:", error);
+                console.error("Unknown error:", error); 
               }
         }
     };

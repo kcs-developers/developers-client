@@ -11,7 +11,7 @@ import Checkbox from "components/checkbox";
 
 const ProblemMain = () => {
 
-
+ 
   const section = [
     { nickname: "유저1", type: "🔢객관식", views: 0, title: "제목입니다", likes: 0 },
     { nickname: "유저2", type: "🔢객관식", views: 0, title: "제목입니다2", likes: 0 },

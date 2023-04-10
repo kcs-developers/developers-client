@@ -89,7 +89,7 @@
 //   display: flex;
 //   justify-content: center;
 //   align-items: center;
-//   width: 15px;
+//   width: 15px; 
 //   height: 15px;
 //   margin-left: 5px;
 //   background-color: white;

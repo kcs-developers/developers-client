@@ -21,7 +21,7 @@ const Checkbox: React.FC = () => {
             // 결과 처리
             console.log(response.data);
         };
-
+ 
         fetchData();
     }, [checkboxState]);
 

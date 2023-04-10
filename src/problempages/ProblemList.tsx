@@ -23,7 +23,7 @@ const MainList = ({ section, sectionHeader }: Type) => {
       console.log(response.data);
       return;
     } catch (error) {
-      console.error(error);
+      console.error(error); 
       return;
     }
   };

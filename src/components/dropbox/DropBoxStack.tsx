@@ -108,7 +108,7 @@ interface SelectDropdownProps {
                                             </div>
                                         </div>
                                     </div>
-                                )}
+                                )} 
                                 {isOpen && (
                                     <div className="cursor-pointer w-full border-gray-100 rounded-b hover:bg-teal-100" style={{ borderBottom: '1px solid #ccc' }} data-value="Ruby" onClick={handleMenuClick}>
                                         <div className="flex w-full items-center p-2 pl-2 border-transparent bg-white border-l-2 relative hover:bg-teal-600 hover:text-teal-100 hover:border-teal-600">

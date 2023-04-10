@@ -18,7 +18,7 @@ interface SelectDropdownProps {
     const menuSelect = (value: string | null) => {
         if (value) {
             setSelectDropValue(value);
-            setIsOpen(false);
+            setIsOpen(false); 
         }
     };
     const fetchProblems = async (language: string) => {
