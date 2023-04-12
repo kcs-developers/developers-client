@@ -11,7 +11,7 @@ const Main = () => {
   ];
 
   return (
-    <>
+    <div className="md:w-[90%] md:m-auto">
       <Carousel />
       {/* 모바일 */}
       <div className="flex flex-col md:hidden">
@@ -27,7 +27,7 @@ const Main = () => {
         <MainList section={section} sectionHeader={"WEEKLY SOLVED BEST"} />
         <MainList section={section} sectionHeader={"WEEKLY ROOM BEST"} />
       </div>
-    </>
+    </div>
   );
 };
 

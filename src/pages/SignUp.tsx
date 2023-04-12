@@ -19,7 +19,7 @@ interface SignProps {
 }
 
 const SignUp = () => {
-  const URL = "http://localhost";
+  const URL = process.env.REACT_APP_DEV_URL;
   const navigate = useNavigate();
   const {
     register,
@@ -101,7 +101,7 @@ const SignUp = () => {
 
   return (
     <div className="flex flex-col items-center justify-center ">
-      <div className="w-3/5 ">
+      <div className="w-full md:max-w-[80%]">
         <div className="flex justify-center text-2xl font-light">회원가입</div>
         <form
           className="grid grid-cols-1 gap-5 mt-10 lg:grid-cols-2 lg:w-full"

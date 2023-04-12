@@ -14,7 +14,7 @@ const App: React.FC = () => {
     <div className="App">
       <BrowserRouter>
         <Nav />
-        <Layout> 
+        <Layout>
           <Routes>
             <Route path="/" element={<Main />} />
             <Route path="/login" element={<Login />} />
@@ -30,5 +30,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-  

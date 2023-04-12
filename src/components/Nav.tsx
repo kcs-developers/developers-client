@@ -20,7 +20,7 @@ const Nav = () => {
   };
 
   return (
-    <nav className="px-4 py-3 bg-gray-800">
+    <nav className="px-4 py-3 bg-gray-800 sticky top-0 z-50">
       <div className="flex items-center justify-between">
         <Link to="/" className="flex items-center">
           <img
