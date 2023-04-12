@@ -53,20 +53,20 @@ const Mentoring = () => {
     <div className="container mx-auto">
       <div className="flex mt-5 mb-3 justify-center">
         <button
-          className={`flex-1 py-2 px-4 border border-blue- text-center ${
-            showScheduler ? 'bg-blue-300' : 'bg-blue-500'
-          }`}
-          onClick={handleClickRoomList}
-        >
-          전체 방 목록
-        </button>
-        <button
           className={`flex-1 py-2 px-4 border border-blue-500 text-center ${
             showScheduler ? 'bg-blue-500' : 'bg-blue-300'
           }`}
           onClick={handleClickScheduler}
         >
           일정 관리
+        </button>
+        <button
+          className={`flex-1 py-2 px-4 border border-blue- text-center ${
+            showScheduler ? 'bg-blue-300' : 'bg-blue-500'
+          }`}
+          onClick={handleClickRoomList}
+        >
+          전체 방 목록
         </button>
       </div>
       {showScheduler ? (
