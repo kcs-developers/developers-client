@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Popup from 'components/live/PopUp';
+import Popup from 'components/live/Popup';
 import MentorProfile from 'components/live/MentorProfile';
 import CalendarPopUp from "components/live/CalendarPopUp";
 

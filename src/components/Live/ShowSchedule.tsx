@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Popup from './PopUp';
+import Popup from './Popup';
 import {
   Scheduler,
   WeekView,
