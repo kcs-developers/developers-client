@@ -118,16 +118,3 @@ const MainList = ({ section, sectionHeader }: Type) => {
   );
 };
 export default MainList;
-
-
-// const YourComponent = () => {
-//   // 기존 코드...
-
-//   const navigate = useNavigate();
-
-//   const handleOnClick = () => {
-//     navigate("/problem/detail");
-//   };
-
-//   // 기존 코드...
-// };

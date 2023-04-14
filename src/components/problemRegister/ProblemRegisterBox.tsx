@@ -102,6 +102,8 @@ const ProblemRegisterBox = () => {
         </div>
         <PointBox point={point} handlePointChange={handlePointChange} />
       </div>
+
+      <div className=" bg-gray-200 px-20 py-10 rounded">    
       <TitleBox title={inputTitle} handleTitleChange={handleTitleChange} />
       {isHashTag && (
         <div className="flex ">
@@ -122,11 +124,14 @@ const ProblemRegisterBox = () => {
           ))}
         </div>
       )}
+      
+
       <div></div>
       <ContentBox
         content={inputContent}
         handleContentChange={handleContentChange}
       />
+  </div>
       {console.log(isSubjective)}
       {isSubjective ? (
         <SubjectiveAnswer

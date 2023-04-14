@@ -6,8 +6,8 @@ interface SubmitProps {
 const Submit = ({ onClick, text }: SubmitProps) => {
   return (
     <button
-      className="fixed right-0 bottom-0 p-4 bg-blue-500 text-white rounded-tl-md cursor-pointer border-2 border-black"
-      onClick={onClick}
+    className="py-2 px-4 bg-transparent text-blue-600 font-semibold border border-blue-600 rounded hover:bg-blue-600 hover:text-white hover:border-transparent transition ease-in duration-200 transform hover:-translate-y-1 active:translate-y-0 mt-3"
+    onClick={onClick}
     >
       {text}
     </button>

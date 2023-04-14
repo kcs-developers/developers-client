@@ -9,6 +9,9 @@ import Mentoring from "pages/Mentoring";
 import Problem from "pages/Problem";
 import MyPage from "pages/MyPage";
 import ProblemRegister from "pages/ProblemRegister";
+import ProblemDetail from "components/problem/ProblemDetailObjective";
+import ProblemDetailObjective from "components/problem/ProblemDetailObjective"
+import ProblemDetailSubjective from "components/problem/ProblemDetailSubjective"
 
 const App: React.FC = () => {
   return (
@@ -24,6 +27,9 @@ const App: React.FC = () => {
             <Route path="/problem" element={<Problem />} />
             <Route path="/mentoring" element={<Mentoring />} />
             <Route path="/problem/register" element={<ProblemRegister />} />
+            <Route path="/problem/detail" element={<ProblemDetail />} />
+            <Route path="/problem/detail/ob" element={<ProblemDetailObjective />} />
+            <Route path="/problem/detail/sb" element={<ProblemDetailSubjective />} />
           </Routes>
         </Layout>
       </BrowserRouter>

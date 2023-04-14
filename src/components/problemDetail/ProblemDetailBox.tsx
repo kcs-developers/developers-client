@@ -21,7 +21,7 @@ const ProblemBox = () =>{
     const locationtest = location?.state;
      const fetchData = async()=>{
             try{
-                const response = await axios.get(`http://localhost:80/problem/4/Taeho`)
+                const response = await axios.get(`http://localhost:80/problem/48/woo`)
                 // `http://localhost:80/problem/${locationtest?.id}/{locationtest?.writer}
             console.log(response);
             setdata(response.data.data);
@@ -30,6 +30,7 @@ const ProblemBox = () =>{
                 console.error(error);
             }
         };
+
         useEffect(()=>{
             fetchData();
         },[])
@@ -44,7 +45,7 @@ const ProblemBox = () =>{
 
                 console.log(problem);
             })} */}
-            {/* {data.map((problem, index) => (
+            {/* {data.map((problem, index) => ( s
         <div key={index}>
           <Titlebox>{problem?.title}</Titlebox>
           <SolutionBox>{problem?.answer}</SolutionBox>

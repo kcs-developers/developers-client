@@ -76,6 +76,10 @@ const ProblemMain = () => {
     navigate("/problem/register");
   };
 
+  const navigatorToDetail = () =>{
+    navigate("/problem/detail/sb")
+  }
+
   return (
     <>
       {/* 모바일 */}
@@ -196,6 +200,25 @@ const ProblemMain = () => {
               } rounded-2xl`}
             />
           </button>
+          {/* test */}
+          <button
+            type="button"
+            className="group rounded-2xl h-10 w-24 bg-blue-500 font-bold text-10 text-white relative overflow-hidden"
+            onClick={navigatorToDetail}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            문제 상세페이지 이동
+            <div
+              className={`absolute duration-200 inset-0 w-full h-full transition-all scale-0 ${
+                isHovered ? "scale-100 bg-white/30" : ""
+              } rounded-2xl`}
+            />
+          </button>
+                    {/* test */}
+
+
+          
         </div>
       </div>
     </>

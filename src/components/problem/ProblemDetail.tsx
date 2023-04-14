@@ -1,8 +1,8 @@
-import ProblemBox from "components/problemDetail/ProblemBox";
+import ProblemDetailBox from "components/problemDetail/ProblemDetailBox";
 const Problem = () => {
     return <>
     <div className="bg-white p-4">
-  <ProblemBox />
+  <ProblemDetailBox />
     </div>
     </>
 }

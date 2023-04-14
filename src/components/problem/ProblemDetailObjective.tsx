@@ -3,46 +3,67 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ProblemPointModal from "components/problem/ProblemPointModal";
 
+interface ProblemBoxProps {
+  problemId: number;
+  nickname: string;
+  writer: string;
+  type: string;
+  views: number;
+  title: string;
+  level: string;
+  likes: number;
+  content: string;
+  hashTag: string;
+  answer: string;
+  answerCandidate: string[]; // answerCandidate 추가
+  solved: boolean;
+
+}
 
 const ProblemDetail = () => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [answer, setAnswer] = useState('');
-  const { problemId, member } = useParams(); //detail을 클릭하였을때 param에 삽입
-  const [detail, setDetail] = useState({
-    problemId:0,
-    title: "",
-    content: "",
-    writer: "",
-    answer:"", //답안을 제출할때 비교한다.
-    level:"",
-    hashTag:"",
-    type:"",
-    views: 0,
-    likes: 0,
-    solved:"",
-    pathname:""
-  });
+  const { problemId, member } = useParams();
+  const [detail, setDetail] = useState<ProblemBoxProps>();
+  const [modalOpen, setModalOpen] = useState(false); //모달 오픈
+  const [answer, setAnswer] = useState(''); //정답 저장 
+  const [answerCandidate, setAnswerCandidate] = useState<string[]>([]); //문제 답안 목록 저장
+  const [modalTitle, setModalTitle] = useState(''); //모달 타이틀 전송
+  const [pointAdd , setPointAdd] = useState(0); // 포인트 -> 연산값이 실제로 연산된 후 보내져야한다.
+  const [isEditing, setIsEditing] = useState(false); // 수정 모드인지 여부
+  const [originalAnswer, setOriginalAnswer] = useState(""); // 수정 모드 진입 시 기존 답변 저장
+  const [problemSolved, setProblemSolved] = useState(false);
 
-  //세션에 저장되어있는 값을 가져오기
-  const sessionAnswer = sessionStorage.getItem('answer') || '';
+
+
+  const sessionAnswer = sessionStorage.getItem('answer') || ''; // 값 null처리
 
   const openModal = () => {
-    setModalOpen(true);
+    if (window.confirm("답안을 제출 하시겠습니까?")) {
+      setModalOpen(true);
+      }
   };
 
-  const handleAnswerChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setAnswer(event.target.value);
-  }
-
   const checkAnswer = () => {
-    return answer === sessionAnswer;
+    return answer === sessionAnswer; //session answer이랑 값 비교
   }
 
   useEffect(() => {
     const fetchProblemDetail = async () => {
       try {
-        const response = await axios.get(`/problem/${problemId}/${member}`);
-        setDetail(response.data);
+        const response = await axios.get(`http://localhost:80/api/problem/1089/lango`)
+
+        // console.log(response);
+        const answerCandidateString = response.data.data.answerCandidate;
+        const answer = response.data.data.answer; //정답 저장
+
+        setAnswer(answer);
+        // console.log(answerCandidateString)
+        const answerCandidateArray = answerCandidateString;
+        // console.log(answerCandidateArray);
+        setAnswerCandidate(answerCandidateArray);
+        // console.log(setAnswerCandidate);
+
+        setDetail(response.data.data);
+
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error("Axios error:", error.message, "Code:", error.code);
@@ -58,25 +79,137 @@ const ProblemDetail = () => {
     return <div>Loading...</div>;
   }
 
+  const handleRadioClick = (candidate: string) => {
+    console.log("Selected radio button index:", candidate);
+    console.log(answer)
+    // 여기에서 번호를 전송하거나 다른 작업을 수행할 수 있습니다.
+    // 정답을 비교 후 모달 창으로 연산 포인트를 보낸다.
+    if (candidate === answer) {
+      console.log("정답처리"); // 추후 삭제 예정
+      console.log(answer);
+      setModalTitle("정답입니다!")
+      setPointAdd(10);
+
+    } else {
+      console.log("오답처리")
+      setModalTitle("오답입니다")
+      setPointAdd(0);
+    }
+  };
+
+  const handleEditing = () => {
+    if (window.confirm("수정 하시겠습니까?")) {
+    setIsEditing(true);
+    // setOriginalAnswer(inputAnswer);
+    // setInputAnswer(detail.answer);
+    }
+    };
+
+  const handleSave = () => {
+    setIsEditing(false);
+  };
+
   return (
     <>
-    <div>
-    <h1>{detail.title}</h1>
-    <p>{detail.content}</p>
-    <p>작성자: {detail.writer}</p>
-    <p>조회수: {detail.views}</p>
-    <p>좋아요: {detail.likes}</p>
-    <p>난이도: {detail.level}</p>
-    <p>문제 유형: {detail.type}</p>
-    <p>해시태그: {detail.hashTag}</p>
-    <p>문제 번호: {detail.problemId}</p>
-    <p>문제 해결 여부: {detail.solved ? '해결' : '미해결'}</p>
-    {/* 더 필요한 내용 출력 */}
-    {/*  */}
-  </div>
-    
-  
-  </>
+      <p>문제 번호: {detail.problemId}</p>
+      <div className="flex justify-between items-center mb-3 ">
+        <p>난이도: {detail.level}</p>
+        <p>point</p>
+      </div>
+      <div className="flex justify-between items-center mb-3">
+        <p>문제 유형: {detail.type}</p>
+        <p>문제 해결 여부: {detail.solved ? '해결' : '미해결'}</p>
+      </div>
+
+      <div className=" bg-gray-200 px-20 py-10 rounded">
+        <div className="mt-4">
+          <div className="flex-container">
+            <h2 className="text-lg font-medium leading-6 text-gray-900 bg-white rounded">제목: {detail.title}</h2>
+          </div>
+          <p className="bg-white rounded mt-4 ">작성자: {detail.writer}</p>
+          <div className="mt-4">
+            <p className="text-sm text-gray-500 bg-white rounded py-9">내용:{detail.content}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4">
+        <label htmlFor="answer" className="block text-sm font-medium text-gray-700">
+          보기
+        </label>
+
+        <div className="flex flex-col items-start space-y-2">
+          {detail.answerCandidate.map((candidate: string, index: number) => (
+            <div key={index} className="flex items-center">
+              <input
+                type="radio"
+                id={`option${index}`}
+                name="answerCandidate"
+                value={candidate}
+                className="mr-2"
+                onChange={() => handleRadioClick(candidate)} // Call the new function when a radio button is clicked
+              />
+              <label htmlFor={`option${index}`} className="text-sm">
+                {/* {index + 1}.  */}
+                {candidate}
+
+              </label>
+            </div>
+          ))}
+        </div>
+
+      </div>
+      <p>조회수: {detail.views}</p>
+      <p>좋아요: {detail.likes}</p>
+      <p>해시태그: {detail.hashTag}</p>
+
+      <div className="flex flex-col justify-center items-end">
+        {isEditing ? (
+          <div className="h-32 flex items-center">
+            <button
+              className="py-2 px-4 bg-transparent text-blue-600 font-semibold border border-blue-600 rounded hover:bg-blue-600 hover:text-white hover:border-transparent transition ease-in duration-200 transform hover:-translate-y-1 active:translate-y-0"
+              onClick={handleSave}
+            >
+              저장
+            </button>
+
+          </div>
+        ) : (
+          <div className="flex flex-col justify-center items-end">
+            <div className="h-32 flex items-center">
+              <div>입력한 값과 일치여부: {checkAnswer() ? '일치' : '불일치'}</div>
+              <button
+                className="py-2 px-4 bg-transparent text-blue-600 font-semibold border border-blue-600 rounded hover:bg-blue-600 hover:text-white hover:border-transparent transition ease-in duration-200 transform hover:-translate-y-1 active:translate-y-0"
+                onClick={handleEditing}
+              >
+                수정
+              </button>
+              <button
+                className="py-2 px-4 bg-transparent text-blue-600 font-semibold border border-blue-600 rounded hover:bg-blue-600 hover:text-white hover:border-transparent transition ease-in duration-200 transform hover:-translate-y-1 active:translate-y-0"
+                onClick={openModal}
+              >
+                문제 제출
+              </button>
+            </div>
+            {modalOpen && (
+              <ProblemPointModal
+                title={modalTitle}
+                point={pointAdd}
+                isOpen={modalOpen}
+                onClose={() => setModalOpen(false)}
+              />
+            )}
+          </div>
+
+
+
+
+
+        )
+
+        }
+      </div>    
+    </>
   );
 };
 

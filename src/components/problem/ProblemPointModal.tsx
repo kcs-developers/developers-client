@@ -2,15 +2,16 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface ModalProps {
-  // title: string; 
+  title: string; 
   // content: string;
   // level: string; //level값을 토대로 점수 합산 
+  point: number;
   isOpen: boolean;
   onClose: () => void;
 
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => { //title,String뺐음
+const Modal: React.FC<ModalProps> = ({ title,point, isOpen, onClose }) => { //String뺐음
   const [visible, setVisible] = useState(isOpen);
   const navigate = useNavigate();
   
@@ -29,9 +30,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => { //title,String뺐
   
   const[pointAdd, setPointAdd] = useState(""); // 점수 값 저장
 
-
-
-
   // const solutionResult = () =>{
   //   let title = "정답입니다."
   //   if (value === "true"){
@@ -40,8 +38,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => { //title,String뺐
   //     title = "오답입니다."
   //   }
   // }
-
-
 
   console.log(setVisible)
   const handleClose = () => {
@@ -57,11 +53,11 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => { //title,String뺐
 
   return visible ? (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50">
-      <div className="relative z-10 w-11/12 max-w-md p-6 mx-auto bg-white rounded-md shadow-lg h-3/6">
+      <div className="relative z-10 w-11/12 max-w-md p-6 mx-auto bg-white rounded-md shadow-lg ">
         <div className="mt-4">
-          <h2 className="text-lg font-medium leading-6 text-gray-900">title</h2>
+          <h2 className="text-lg font-medium leading-6 text-gray-900">{title}</h2>
           <div className="mt-4">
-            <p className="text-sm text-gray-500">content</p>
+            <p className="text-sm text-gray-500">content+{point}</p>
           </div>
         </div>
 
