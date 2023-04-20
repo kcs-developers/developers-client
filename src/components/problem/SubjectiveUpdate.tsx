@@ -373,7 +373,7 @@ const ProblemDetail = () => {
 
   const handleLikeButtonClick = async () => {
     try {
-      await axios.post(`http://localhost:9001/api/problem/${problemId}`);
+      await axios.post(`http://localhost:80/api/problem/${problemId}`);
       setLikes(likes + 1);
     } catch (error) {
       if (axios.isAxiosError(error)) {

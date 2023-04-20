@@ -6,16 +6,15 @@ interface objectiveAnswerComponent {
   onChange: (answers: string[]) => void;
   answers:string[];
   setAnswers:(answers: string[]) => void;
-
 }
 
 const ObjectiveAnswer = ({ Count, onChange,answers,setAnswers }: objectiveAnswerComponent) => {
-
-  const handleAnswerChange = (index: number, answer: string) => {
+  console.log(answers);
+  const handleAnswerChange = (index: number, value: string) => {
     const newAnswers = [...answers];
-    newAnswers[index] = answer;
+    newAnswers[index] = value;
     setAnswers(newAnswers);
-    onChange(newAnswers);
+    // onChange(newAnswers);
   };
   return (
     <div className="mt-4">
