@@ -381,7 +381,7 @@ interface ProblemProps {
   views: number;
   likes: number;
   createdTime: string;
-  hashTag: string;
+  hashTag: string[];
   tag?: null | string;
 }
 
@@ -401,6 +401,7 @@ const Problem = () => {
   const [selectTemp, setSelectTemp] = useState<string[]>([]);
   const [searchTemp, setSearchTerm] = useState<string[]>([]);
   const SIZE = 5;
+  const [filteredProblemList, setFilteredProblemList] = useState<ProblemProps[]>([]);
 
 
 
@@ -509,7 +510,7 @@ const Problem = () => {
   const searchList = useAsync(async () =>{
     const params = searchTemp;
     const response = await axios.get(`api/problem?search=${params}`);
-    
+    console.log(`response 확인`, response);
     return response
 
 
@@ -534,7 +535,7 @@ const Problem = () => {
 
   useEffect(() => {
     const getProblemList = async () => {
-      setResData([...testData]); // 임시 더미데이터
+      // setResData([...testData]); // 임시 더미데이터
       /* await axios
       .get(`${URL}/api/problem/list/{sortcondition}`)
       .then(({ data }) => {
@@ -546,19 +547,43 @@ const Problem = () => {
     getProblemList();
   }, []);
 
-    const loadedData = async () => {
-    setIsLoading(true);
-    const totalCount = problemList.length;
-    const totalPages = Math.round(totalCount / SIZE);
-    if (totalPages >= page) {
-      setPage(page + 1);
-      const nextList = problemList.slice(page * SIZE, (page + 1) * SIZE);
-      setProblemList([...problemList, ...nextList]);
-    }
-    setIsLoading(false);
-  };
   
- 
+ console.log(problemList,"!2");
+
+
+ const loadedData = async () => {
+  setIsLoading(true);
+  const totalCount = problemList.length;
+  const totalPages = Math.round(totalCount / SIZE);
+  if (totalPages >= page) {
+    setPage(page + 1);
+    const nextList = problemList.slice(page * SIZE, (page + 1) * SIZE);
+    setProblemList([...problemList, ...nextList]);
+  }
+  setIsLoading(false);
+};
+
+ useEffect(() => {
+  const hashTags = selectTemp
+    .filter((value) => value.startsWith("hashtag="))
+    .map((value) => value.substring(8).split(",")) // 콤마로 구분된 해시태그 배열로 변환
+    .flat(); // 하위 배열을 합치기
+
+  if (hashTags.length > 0) {
+    const filtered = problemList.filter((problem) => {
+      if (!problem.hashTag) return false;
+
+      const problemHashTags = problem.hashTag// 콤마로 구분된 해시태그 배열로 변환
+      return hashTags.every((hashTag) =>
+        problemHashTags.includes(hashTag)
+      );
+    });
+    setFilteredProblemList(filtered);
+  } else {
+    setFilteredProblemList(problemList);
+  }
+}, [selectTemp, problemList]);
+
   return (
     <div className="md:m-auto w-full md:w-4/5">
       <div className="flex justify-end mt-5 mb-10">
@@ -616,54 +641,59 @@ const Problem = () => {
         <div className="flex justify-center">문제 유형</div>
       </div>
 
-      {problemList?.map((el, idx) => (
-        // <Link to={`/problem/${el.problemId}/${nickname}`} key={idx}>
-          <div onClick={()=>{
+      {filteredProblemList.length === 0 && (selectTemp.length > 0 || searchTemp.length > 0) ? (
+        <div className="text-center mt-5">검색 결과가 없습니다.</div>
+        ) : (filteredProblemList?.map((el, idx) => (
+          // <Link to={`/problem/${el.problemId}/${nickname}`} key={idx}>
+          <div key={`idx-${idx}`} onClick={()=>{
             // navigate(el.writer!=="Taeho"? "/problem/detail":"/problem/register",{state:el});
-            navigate(el.writer!=="Taho"? "/problem/detail":"/problem/register",{state:el});
-            console.log(el);
-          }} className="grid grid-cols-10 bg-gray-100 rounded-lg py-2.5 mb-2 shadow">
-        <div className="flex justify-center items-center">
-          {el.answer.length >= 1 ? (
-            <CheckIcon fill="blue" width={25} height={25} />
-          ) : null}
-        </div>
-        <div className="col-span-7 text-xl ">
-          <h1 className="font-semibold">{el.title}</h1>
+          navigate(el.writer !== "Tao" ? "/problem/detail" : "/problem/register", { state: el });
+          console.log(el);
+        }} className="grid grid-cols-10 bg-gray-100 rounded-lg py-2.5 mb-2 shadow">
+          <div className="flex justify-center items-center">
+            {el.answer.length >= 1 ? (
+              <CheckIcon fill="blue" width={25} height={25} />
+            ) : null}
+          </div>
+          <div className="col-span-7 text-xl ">
+            <h1 className="font-semibold">{el.title}</h1>
 
-          <div className="flex items-center justify-between">
-            <div className="flex">
-              <div className="flex text-sm text-slate-600">{el.writer} &nbsp;</div>
-              <div className="flex text-sm mr-4 items-center text-gray-400">
-                <ViewIcon fill="lightGray" width={18} height={18} />
-                &nbsp;{el.views}
+            <div className="flex items-center justify-between">
+              <div className="flex">
+                <div className="flex text-sm text-slate-600">{el.writer} &nbsp;</div>
+                <div className="flex text-sm mr-4 items-center text-gray-400">
+                  <ViewIcon fill="lightGray" width={18} height={18} />
+                  &nbsp;{el.views}
+                </div>
+                <div className="flex text-sm mr-4 items-center text-gray-400">
+                  <LikesIcon fill="lightGray" width={14} height={14} />
+                  &nbsp;{el.likes}
+                </div>
               </div>
-              <div className="flex text-sm mr-4 items-center text-gray-400">
-                <LikesIcon fill="lightGray" width={14} height={14} />
-                &nbsp;{el.likes}
-              </div>
+              <Tags tagList={el.hashTag ? el.hashTag : []} />
             </div>
-            <Tags tagList={el.hashTag ? el.hashTag.split(",") : []} />
-            </div>
+          </div>
+          <div className="flex justify-center items-center">
+            {el.level === "gold" ? (
+              <LevelIcon fill="#D9B600" width={22} height={22} />
+            ) : el.level === "silver" ? (
+              <LevelIcon fill="gray" width={22} height={22} />
+            ) : (
+              <LevelIcon fill="#AD5600" width={22} height={22} />
+            )}
+          </div>
+          <div className="flex justify-center items-center text-sm">
+            {el.type === "answer" ? "주관식" : "객관식"}
+          </div>
         </div>
-        <div className="flex justify-center items-center">
-          {el.level === "gold" ? (
-            <LevelIcon fill="#D9B600" width={22} height={22} />
-          ) : el.level === "silver" ? (
-            <LevelIcon fill="gray" width={22} height={22} />
-          ) : (
-            <LevelIcon fill="#AD5600" width={22} height={22} />
-          )}
-        </div>
-        <div className="flex justify-center items-center text-sm">
-          {el.type === "answer" ? "주관식" : "객관식"}
-        </div>
-      </div>
-    ))}
-    <div ref={target}>{isLoading && <div>Loading...</div>}</div>
-    <ScrollButton/>
-  </div>
-);
+      )))}
+      <div ref={target}>{isLoading && <div>Loading...</div>}</div>
+      <ScrollButton />
+    </div>
+  );
 };
 
-export default Problem;
+export default Problem; 
+
+
+

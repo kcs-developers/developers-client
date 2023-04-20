@@ -63,6 +63,9 @@ const PopularTags = ({ selectFn, handleResetTemp}: PopularTagsProps) => {
     { id: 6, name: 'HTML' },
     { id: 7, name: 'Vue.js' },
     { id: 8, name: 'Angular' },
+    { id: 9, name: 'BackEnd' },
+    { id: 10, name: 'Java' },
+    { id: 11, name: 'Cloud' },
   ];
 
   const [tags, setTags] = useState<PopularTag[]>([]);
@@ -73,12 +76,17 @@ const PopularTags = ({ selectFn, handleResetTemp}: PopularTagsProps) => {
 
   const handleSelectTag = (value: string) => {
     const selectedPopularTag = popularTags.find(tag => tag.name === value);
+  
+    // 이미 선택된 태그인지 확인
+    if (tags.find(tag => tag.name === value)) {
+      return;
+    }
+  
     if (selectedPopularTag) {
       setSelectedTag(selectedPopularTag.name);
       setTags([...tags, selectedPopularTag]);
       setContent("");
       console.log(`검색어: ${content}`);
-      const hashtags = tags.concat(selectedPopularTag).map(tag => tag.name).join(",");
       // window.history.pushState({}, "", `/problem/list?hashtag=${hashtags}`);
     }
   };
@@ -95,7 +103,6 @@ const PopularTags = ({ selectFn, handleResetTemp}: PopularTagsProps) => {
 
     // URL에서 삭제할 태그를 제거합니다.
     const hashtags = updatedTags.map(tag => tag.name).join(",");
-    window.history.pushState({}, "", `/list?hashtag=${hashtags}`);
     handleResetTemp(`hashtag=${hashtags}`); // handleResetTemp 호출
   };
 

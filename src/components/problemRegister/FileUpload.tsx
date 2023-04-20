@@ -30,7 +30,7 @@ function FileUpload({files, onFileChange}:FileUploadProps) {
       ) : (
         <p>첨부파일</p>
       )}
-      {files.length > 0 && (
+      {files?.length > 0 && (
         <div className="mt-4">
           <h4 className="font-bold">첨부된 파일:</h4>
           <ul className="list-disc pl-6 mt-2 p-4 boarder-gray-400">

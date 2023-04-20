@@ -1,10 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams,useNavigate } from "react-router-dom";
+import { useParams,useNavigate, useLocation } from "react-router-dom";
 import ProblemPointModal from "components/problem/ProblemPointModal";
 
 interface ProblemBoxProps { 
-  problemId: number; //>>
+  problemId: number; 
   nickname: string; //>>
   writer: string; //>>
   type: string; //>>
@@ -21,6 +21,7 @@ interface ProblemBoxProps {
 }
 
 const ProblemDetail = () => {
+  const location = useLocation();
   const { problemId, member } = useParams();
   const [detail, setDetail] = useState<ProblemBoxProps>();
   const [modalOpen, setModalOpen] = useState(false); //모달 오픈
@@ -36,6 +37,8 @@ const ProblemDetail = () => {
   const [answerWriter, setAnswerWriter] = useState(''); //문제 작성자를 받아오기 위한값===
   const navigate = useNavigate(); 
   const [likes, setLikes] = useState(detail?.likes || 0);
+  const [isLiked, setIsLiked] = useState(false);
+
 
 
   const sessionAnswer = sessionStorage.getItem('answer') || ''; // 값 null처리
@@ -53,7 +56,7 @@ const ProblemDetail = () => {
   useEffect(() => {
     const fetchProblemDetail = async () => {
       try {
-        const response = await axios.get(`http://localhost:9001/api/problem/68/Taeho`)
+        const response = await axios.get(`http://localhost:80/api/problem/${location.state.problemId}/${location.state.writer}`)
  
         // console.log(response);
         const answerCandidateString = response.data.data.answerCandidate;
@@ -127,8 +130,10 @@ const ProblemDetail = () => {
 
   const handleLikeButtonClick = async () => {
     try {
-      await axios.post(`http://localhost:9001/api/problem/3`);
-      setLikes(likes + 1);
+      const response = await axios.post(`http://localhost:80/api/problem/${location.state.problemId}`);
+      setLikes(response.data?.data?.likes);
+      setIsLiked(true);
+      setLikes(likes + 1)
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error.message, "Code:", error.code);
@@ -146,6 +151,7 @@ const ProblemDetail = () => {
         <p>point</p>
       </div>
       <div className="flex justify-between items-center mb-3">
+
         <p>문제 유형: {detail.type}</p>
         <p>문제 해결 여부: {detail.solved ? '해결' : '미해결'}</p>
       </div>
@@ -194,6 +200,7 @@ const ProblemDetail = () => {
         <button
           className="py-2 px-4 bg-transparent text-blue-600 font-semibold border border-blue-600 rounded hover:bg-blue-600 hover:text-white hover:border-transparent transition ease-in duration-200 transform hover:-translate-y-1 active:translate-y-0"
           onClick={handleLikeButtonClick}
+          disabled={isLiked}
         >
           좋아요: {likes}
         </button>
@@ -250,3 +257,4 @@ const ProblemDetail = () => {
 };
 
 export default ProblemDetail;
+

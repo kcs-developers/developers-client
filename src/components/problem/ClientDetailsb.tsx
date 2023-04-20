@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import ProblemPointModal from "components/problem/ProblemPointModal";
 
 
@@ -20,6 +20,8 @@ interface ProblemBoxProps {
 }
 
 const ProblemDetail = () => {
+  const location = useLocation()
+
   const { problemId, member } = useParams(); //detail을 클릭하였을때 param에 삽입
   const [detail, setDetail] = useState<ProblemBoxProps | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -34,7 +36,10 @@ const ProblemDetail = () => {
   const [btnVisible, setBtnVisible] = useState(false); //문제 작성자는 문제 풀수없도록 하기 위한 속성===
   const [answerWriter, setAnswerWriter] = useState(''); //문제 작성자를 받아오기 위한값===
   const navigate = useNavigate();
-  const [likes, setLikes] = useState(detail?.likes || 0);
+  // const [likes, setLikes] = useState(!detail ? 0 : detail?.likes);
+  const [likes, setLikes] = useState('');
+  const [isLiked, setIsLiked] = useState(false);
+
 
 
   //세션에 저장되어있는 값을 가져오기
@@ -55,7 +60,9 @@ const ProblemDetail = () => {
   useEffect(() => {
     const fetchProblemDetail = async () => {
       try {
-        const response = await axios.get(`http://localhost:9001/api/problem/3/Taeho`);
+        const response = await axios.get(`http://localhost:80/api/problem/${location.state.problemId}/${location.state.writer}`)
+        console.log(response?.data?.data);
+        setLikes(response.data?.data?.likes);
         setDetail(response.data.data);
         setAnswer(response.data.data.answer);
         setAnswerWriter(response.data.data.writer);
@@ -69,14 +76,6 @@ const ProblemDetail = () => {
     };
     fetchProblemDetail();
   }, [problemId, member]);
-
-  useEffect(() => {
-    if (answerWriter === "lango") { //memberId받아오기
-      setBtnVisible(false);
-    } else {
-      setBtnVisible(true);
-    }
-  }, [answerWriter]);
 
 
   if (!detail) {
@@ -112,9 +111,23 @@ const ProblemDetail = () => {
 
   };
 
+  // const handleLikeButtonClick = async () => {
+  //   try {
+  //     await axios.post(`http://localhost:9001/api/problem/3`);
+  //     setLikes(likes + 1);
+  //   } catch (error) {
+  //     if (axios.isAxiosError(error)) {
+  //       console.error("Axios error:", error.message, "Code:", error.code);
+  //     } else {
+  //       console.error("Unknown error:", error);
+  //     }
+  //   }
+  // };
+  // console.log(likes)
   const handleLikeButtonClick = async () => {
     try {
-      await axios.post(`http://localhost:9001/api/problem/3`);
+      await axios.post(`http://localhost:80/api/problem/${location.state.problemId}`);
+      setIsLiked(true);
       setLikes(likes + 1);
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -124,6 +137,7 @@ const ProblemDetail = () => {
       }
     }
   };
+
 
 
   return (
@@ -165,12 +179,14 @@ const ProblemDetail = () => {
             disabled={!isEditing}
           ></textarea>
         </div>
+        
       </div>
       <p>조회수: {detail.views}</p>
       {detail && (
         <button
           className="py-2 px-4 bg-transparent text-blue-600 font-semibold border border-blue-600 rounded hover:bg-blue-600 hover:text-white hover:border-transparent transition ease-in duration-200 transform hover:-translate-y-1 active:translate-y-0"
           onClick={handleLikeButtonClick}
+          disabled={isLiked}
         >
           좋아요: {likes}
         </button>
@@ -179,7 +195,7 @@ const ProblemDetail = () => {
 
 
       <div>
-         <>
+        <>
           <div className="flex flex-col justify-center items-end">
             {isEditing ? (
               <div className="h-32 flex items-center">
