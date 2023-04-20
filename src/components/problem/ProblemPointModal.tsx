@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "components/axiosInstance";
 
 
 interface ModalProps {
@@ -47,7 +47,7 @@ const Modal: React.FC<ModalProps> = ({ title,point, isOpen, onClose }) => { //St
         solver: "yeop", // 실제 푼 사람의 사용자 이름으로 변경하세요. -> 나중에 사용자 값을 받아야함
         id: 12, // 적절한 id 값을 설정하세요.
       };
-      const response = await axios.post("http://localhost:80/api/solution", request);
+      const response = await axios.post("http://localhost:9001/api/solution", request);
       console.log(response.data);
     } catch (error) {
       console.error("Error:", error);

@@ -9,7 +9,7 @@ const ProblemSolved = () => {
     const navigate = useNavigate();
     return (
         <>
-        {location?.state?.type === "answer" ? <ClientDetailsb/> : <ClientDetailob/>}
+        {location.state.type === "answer" ? <ClientDetailsb/> : <ClientDetailob/>}
         </>
     )
 }

@@ -53,7 +53,7 @@ const ProblemDetail = () => {
   useEffect(() => {
     const fetchProblemDetail = async () => {
       try {
-        const response = await axios.get(`http://localhost:80/api/problem/68/Taeho`)
+        const response = await axios.get(`http://localhost:9001/api/problem/68/Taeho`)
  
         // console.log(response);
         const answerCandidateString = response.data.data.answerCandidate;
