@@ -104,8 +104,8 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
                     })
                     .catch((err) => console.log(err));
 
-                  handleClose();
-                  window.location.reload();
+                  // handleClose();
+                  // window.location.reload();
                 } else {
                   alert(res.data["msg"]);
                 }
@@ -117,7 +117,7 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
             );
             return;
           }
-          window.location.reload();
+          handleClose();
         }
       }
     };
