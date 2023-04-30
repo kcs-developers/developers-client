@@ -20,7 +20,18 @@ const MentorProfile: React.FC<MentorProfileProps> = ({ bio, name }) => {
   const { memberInfo, memberId } = useRecoilValue(memberInfoState);
   const [subscriptions, setSubscriptions] = useRecoilState(subscriptionState);
   const isSelf = memberInfo.nickname === name; // 본인 구독 불가
-  const [componentSub, setComponentSub] = useState([]); // 알림 버튼 변경 state
+  const [subscribed, setSubscribed] = useState(false); // 알림 버튼 변경 state
+
+  // 구독 목륵을 불러와서 그에 해당하는 상태값 지정하기
+  useEffect(() => {
+    const fetchData = async () => {
+      const subData = await getSubscriptions(memberInfo.nickname);
+      setSubscribed(
+        subData.some((sub: Subscription) => sub.mentorName === name)
+      );
+    };
+    fetchData();
+  }, [subscriptions]);
 
   const getSubscriptions = async (nickname: string) => {
     const response = await axiosInstance.get(
@@ -29,21 +40,12 @@ const MentorProfile: React.FC<MentorProfileProps> = ({ bio, name }) => {
     return response.data;
   };
 
-  // 구독 목륵을 불러와서 그에 해당하는 상태값 지정하기
-  useEffect(() => {
-    const fetchData = async () => {
-      const subData = await getSubscriptions(memberInfo.nickname);
-      setComponentSub(subData);
-    };
-    fetchData();
-  }, []);
-
   // 구독 여부를 확인하는 변수를 생성하고 recoil에서 구독 목록(subscriptions)에 따라 값을 설정
-  const [subscribed, setSubscribed] = useState(() => {
-    return componentSub.some(
-      (subscription: Subscription) => subscription.mentorName === name
-    );
-  });
+  // const [subscribed, setSubscribed] = useState(() => {
+  //   return subscriptions.some(
+  //     (subscription: Subscription) => subscription.mentorName === name
+  //   );
+  // });
 
   // useEffect(() => {
   //   setSubscribed(() => {
@@ -75,7 +77,7 @@ const MentorProfile: React.FC<MentorProfileProps> = ({ bio, name }) => {
         };
 
     // 일반 푸시 알림 요청
-    axiosInstance({
+    await axiosInstance({
       url: `${endpoint}`,
       data: notifybody,
       method: subscribed ? "DELETE" : "POST",
