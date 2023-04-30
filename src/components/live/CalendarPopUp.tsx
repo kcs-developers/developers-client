@@ -117,6 +117,7 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
             );
             return;
           }
+          window.location.reload();
         }
       }
     };

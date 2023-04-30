@@ -20,21 +20,38 @@ const MentorProfile: React.FC<MentorProfileProps> = ({ bio, name }) => {
   const { memberInfo, memberId } = useRecoilValue(memberInfoState);
   const [subscriptions, setSubscriptions] = useRecoilState(subscriptionState);
   const isSelf = memberInfo.nickname === name; // 본인 구독 불가
+  const [componentSub, setComponentSub] = useState([]); // 알림 버튼 변경 state
+
+  const getSubscriptions = async (nickname: string) => {
+    const response = await axiosInstance.get(
+      `/api/subscriptions?userName=${nickname}`
+    );
+    return response.data;
+  };
+
+  // 구독 목륵을 불러와서 그에 해당하는 상태값 지정하기
+  useEffect(() => {
+    const fetchData = async () => {
+      const subData = await getSubscriptions(memberInfo.nickname);
+      setComponentSub(subData);
+    };
+    fetchData();
+  }, []);
 
   // 구독 여부를 확인하는 변수를 생성하고 recoil에서 구독 목록(subscriptions)에 따라 값을 설정
   const [subscribed, setSubscribed] = useState(() => {
-    return subscriptions.some(
+    return componentSub.some(
       (subscription: Subscription) => subscription.mentorName === name
     );
   });
 
-  useEffect(() => {
-    setSubscribed(() => {
-      return subscriptions.some(
-        (subscription: Subscription) => subscription.mentorName === name
-      );
-    });
-  }, [subscriptions]);
+  // useEffect(() => {
+  //   setSubscribed(() => {
+  //     return subscriptions.some(
+  //       (subscription: Subscription) => subscription.mentorName === name
+  //     );
+  //   });
+  // }, [subscriptions]);
 
   // 이벤트 처리 함수를 수정하여 구독 및 구독 취소 시 엔드포인트가 정확하게 변경되도록 함
   const handleSubscription = async () => {
@@ -90,7 +107,7 @@ const MentorProfile: React.FC<MentorProfileProps> = ({ bio, name }) => {
           return prevSubscriptions;
         });
         setSubscribed(!subscribed);
-        window.location.reload();
+        // window.location.reload();
       })
       .catch((err) => console.log(err));
   };
