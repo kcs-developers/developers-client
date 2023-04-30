@@ -109,15 +109,18 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
                 } else {
                   alert(res.data["msg"]);
                 }
+                handleClose();
+                window.location.reload();
               })
               .catch((err) => console.log(err));
           } else {
             alert(
               `${memberInfo.nickname} 회원님의 포인트가 부족하여 멘토링 신청이 불가합니다.`
             );
+            handleClose();
+            window.location.reload();
             return;
           }
-          handleClose();
         }
       }
     };
