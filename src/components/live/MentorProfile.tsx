@@ -21,6 +21,7 @@ const MentorProfile: React.FC<MentorProfileProps> = ({ bio, name }) => {
   const [subscriptions, setSubscriptions] = useRecoilState(subscriptionState);
   const isSelf = memberInfo.nickname === name; // 본인 구독 불가
   const [subscribed, setSubscribed] = useState(false); // 알림 버튼 변경 state
+  const [refreshKey, setRefreshKey] = useState(false); //강제리랜더링을 위한 값 생성
 
   // 구독 목륵을 불러와서 그에 해당하는 상태값 지정하기
   useEffect(() => {
@@ -31,7 +32,7 @@ const MentorProfile: React.FC<MentorProfileProps> = ({ bio, name }) => {
       );
     };
     fetchData();
-  }, [subscriptions]);
+  }, [subscriptions, refreshKey]);
 
   const getSubscriptions = async (nickname: string) => {
     const response = await axiosInstance.get(
@@ -39,21 +40,6 @@ const MentorProfile: React.FC<MentorProfileProps> = ({ bio, name }) => {
     );
     return response.data;
   };
-
-  // 구독 여부를 확인하는 변수를 생성하고 recoil에서 구독 목록(subscriptions)에 따라 값을 설정
-  // const [subscribed, setSubscribed] = useState(() => {
-  //   return subscriptions.some(
-  //     (subscription: Subscription) => subscription.mentorName === name
-  //   );
-  // });
-
-  // useEffect(() => {
-  //   setSubscribed(() => {
-  //     return subscriptions.some(
-  //       (subscription: Subscription) => subscription.mentorName === name
-  //     );
-  //   });
-  // }, [subscriptions]);
 
   // 이벤트 처리 함수를 수정하여 구독 및 구독 취소 시 엔드포인트가 정확하게 변경되도록 함
   const handleSubscription = async () => {
@@ -109,7 +95,7 @@ const MentorProfile: React.FC<MentorProfileProps> = ({ bio, name }) => {
           return prevSubscriptions;
         });
         setSubscribed(!subscribed);
-        // window.location.reload();
+        setRefreshKey(!refreshKey);
       })
       .catch((err) => console.log(err));
   };
