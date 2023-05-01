@@ -1,4 +1,5 @@
-import axios from "axios";
+import { useState } from "react";
+import axios, { AxiosError } from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
@@ -15,9 +16,9 @@ interface LoginProps {
 }
 
 const Login = () => {
-  const URL = process.env.REACT_APP_DEV_URL;
   const [member, setMember] = useRecoilState(memberInfoState);
   const navigate = useNavigate();
+  const [errLogInMsg, setErrLogInMsg] = useState("");
   const {
     register,
     handleSubmit,
@@ -28,40 +29,48 @@ const Login = () => {
 
   const handleLoginSubmit: SubmitHandler<LoginProps> = async (formData) => {
     try {
-      const { data } = await MEMBER_API.login(formData);
-      let accessToken = data.accessToken;
-      let refreshToken = data.refreshToken;
-      setLocalStorage("access_token", accessToken); // 임시
-      setLocalStorage("refresh_token", refreshToken);
+      const { data, status } = await MEMBER_API.login(formData);
+      if (status === 200) {
+        let accessToken = data.accessToken;
+        let refreshToken = data.refreshToken;
+        setLocalStorage("access_token", accessToken); // 임시
+        setLocalStorage("refresh_token", refreshToken);
 
-      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-      axiosInstance.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${accessToken}`;
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${accessToken}`;
+        axiosInstance.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${accessToken}`;
 
-      const resData = {
-        memberId: Number(data.memberId),
-        isLoggedIn: true,
-      };
-      setMember({
-        ...member,
-        ...resData,
-      });
+        const resData = {
+          memberId: Number(data.memberId),
+          isLoggedIn: true,
+        };
+        setMember({
+          ...member,
+          ...resData,
+        });
 
-      /* 유저정보 조회 */
-      const userData = await MEMBER_API.getUser(data.memberId);
-      setMember({
-        ...member,
-        isLoggedIn: true,
-        memberId: Number(data.memberId),
-        memberInfo: userData?.data.data,
-      });
-      // console.log("로그인후 유저정보조회:", userData?.data.data);
-
-      navigate("/");
-    } catch (error) {
-      console.log(error);
-      alert("로그인에 실패했습니다. 다시 로그인 해주세요.");
+        /* 유저정보 조회 */
+        const userData = await MEMBER_API.getUser(data.memberId);
+        setMember({
+          ...member,
+          isLoggedIn: true,
+          memberId: Number(data.memberId),
+          memberInfo: userData?.data.data,
+        });
+        // console.log("로그인후 유저정보조회:", userData?.data.data);
+        navigate("/");
+      }
+    } catch (err: unknown) {
+      if (err instanceof AxiosError && err?.response!.data?.status === 401) {
+        if (err?.response!.data?.message === "로그인에 실패했습니다.") {
+          setErrLogInMsg(
+            "로그인에 실패했습니다. 아이디나 비밀번호를 정확하게 입력해주세요"
+          );
+        }
+      }
     }
   };
 
@@ -85,6 +94,7 @@ const Login = () => {
                   value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
                   message: "이메일을 올바르게 입력해주세요.",
                 },
+                onChange: () => setErrLogInMsg(""),
               })}
             />
             <div className="text-xs text-red-500">
@@ -106,10 +116,11 @@ const Login = () => {
                   value: 18,
                   message: "18자 이하의 비밀번호를 입력해주세요",
                 },
+                onChange: () => setErrLogInMsg(""),
               })}
             />
             <div className="text-xs text-red-500">
-              {errors?.loginPassword?.message}
+              {errors?.loginPassword?.message} {errLogInMsg && errLogInMsg}
             </div>
 
             <button

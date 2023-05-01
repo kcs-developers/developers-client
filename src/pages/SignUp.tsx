@@ -34,6 +34,8 @@ const SignUp = () => {
   const [address, setAdress] = useState("");
   const [position, setPosition] = useState<string[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
+  const [errEmail, setErrEmail] = useState("");
+  const [errNickname, setErrNickname] = useState("");
 
   const onValid = (e: React.ChangeEvent<HTMLInputElement>) => {
     const pwdConfirm = e.target.value;
@@ -69,13 +71,13 @@ const SignUp = () => {
         }
       )
       .then((res) => {
-        console.log("회원가입 응답", res.data);
+        console.log("회원가입 응답", res.data); //
         if (res.data.msg === "이미 가입된 이메일입니다.") {
-          alert("이미 사용중인 이메일 입니다.");
+          setErrEmail("이미 사용중인 이메일 입니다.");
         } else if (res.data.msg === "이미 사용중인 닉네임입니다.") {
-          alert("이미 사용중인 닉네임 입니다.");
+          setErrNickname("이미 사용중인 닉네임 입니다.");
         } else {
-          alert("회원가입 되었습니다!");
+          alert("회원가입 되었습니다.");
           navigate("/login");
         }
       })
@@ -105,9 +107,12 @@ const SignUp = () => {
                   value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
                   message: "이메일을 올바르게 입력해주세요.",
                 },
+                onChange: () => setErrEmail(""),
               })}
             />
-            <div className="text-xs text-red-500">{errors?.email?.message}</div>
+            <div className="text-xs text-red-500">
+              {errors?.email?.message} {errEmail && errEmail}
+            </div>
             <label className="mt-4 text-xs">닉네임</label>
             <input
               placeholder="닉네임"
@@ -122,10 +127,11 @@ const SignUp = () => {
                   value: 10,
                   message: "10자 이하의 닉네임을 입력해주세요",
                 },
+                onChange: () => setErrNickname(""),
               })}
             />
             <div className="text-xs text-red-500">
-              {errors?.nickname?.message}
+              {errors?.nickname?.message} {errNickname && errNickname}
             </div>
             <label className="mt-4 text-xs">비밀번호</label>
             <input
